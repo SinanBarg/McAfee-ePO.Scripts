@@ -1,6 +1,0 @@
-Latency Guidelines:
-
-READ/WRITE Latencies < 50ms = GOOD
-READ/WRITE Latencies < 100ms and > 50ms = Required optimizations
-READ/WRITE Latencies > 100ms = BAD
-
