@@ -1,0 +1,169 @@
+<html>
+<head>
+<title>TIE Hash Importer</title>
+<!--Tweaked & Modified-->
+<!--Sinan Barghouthi-->
+<!--Version 1.1-->
+<!--McAfee 31/10/2017-->
+</head>
+<body>
+<script>
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+var saveAs=saveAs||"undefined"!==typeof navigator&&navigator.msSaveOrOpenBlob&&navigator.msSaveOrOpenBlob.bind(navigator)||function(a){"use strict";if("undefined"===typeof navigator||!/MSIE [1-9]\./.test(navigator.userAgent)){var k=a.document,n=k.createElementNS("http://www.w3.org/1999/xhtml","a"),w="download"in n,x=function(c){var e=k.createEvent("MouseEvents");e.initMouseEvent("click",!0,!1,a,0,0,0,0,0,!1,!1,!1,!1,0,null);c.dispatchEvent(e)},q=a.webkitRequestFileSystem,u=a.requestFileSystem||q||a.mozRequestFileSystem,
+y=function(c){(a.setImmediate||a.setTimeout)(function(){throw c;},0)},r=0,s=function(c){var e=function(){"string"===typeof c?(a.URL||a.webkitURL||a).revokeObjectURL(c):c.remove()};a.chrome?e():setTimeout(e,500)},t=function(c,a,d){a=[].concat(a);for(var b=a.length;b--;){var l=c["on"+a[b]];if("function"===typeof l)try{l.call(c,d||c)}catch(f){y(f)}}},m=function(c,e){var d=this,b=c.type,l=!1,f,p,k=function(){t(d,["writestart","progress","write","writeend"])},g=function(){if(l||!f)f=(a.URL||a.webkitURL||
+a).createObjectURL(c);p?p.location.href=f:void 0==a.open(f,"_blank")&&"undefined"!==typeof safari&&(a.location.href=f);d.readyState=d.DONE;k();s(f)},h=function(a){return function(){if(d.readyState!==d.DONE)return a.apply(this,arguments)}},m={create:!0,exclusive:!1},v;d.readyState=d.INIT;e||(e="download");if(w)f=(a.URL||a.webkitURL||a).createObjectURL(c),n.href=f,n.download=e,x(n),d.readyState=d.DONE,k(),s(f);else{a.chrome&&b&&"application/octet-stream"!==b&&(v=c.slice||c.webkitSlice,c=v.call(c,0,
+c.size,"application/octet-stream"),l=!0);q&&"download"!==e&&(e+=".download");if("application/octet-stream"===b||q)p=a;u?(r+=c.size,u(a.TEMPORARY,r,h(function(a){a.root.getDirectory("saved",m,h(function(a){var b=function(){a.getFile(e,m,h(function(a){a.createWriter(h(function(b){b.onwriteend=function(b){p.location.href=a.toURL();d.readyState=d.DONE;t(d,"writeend",b);s(a)};b.onerror=function(){var a=b.error;a.code!==a.ABORT_ERR&&g()};["writestart","progress","write","abort"].forEach(function(a){b["on"+
+a]=d["on"+a]});b.write(c);d.abort=function(){b.abort();d.readyState=d.DONE};d.readyState=d.WRITING}),g)}),g)};a.getFile(e,{create:!1},h(function(a){a.remove();b()}),h(function(a){a.code===a.NOT_FOUND_ERR?b():g()}))}),g)}),g)):g()}},b=m.prototype;b.abort=function(){this.readyState=this.DONE;t(this,"abort")};b.readyState=b.INIT=0;b.WRITING=1;b.DONE=2;b.error=b.onwritestart=b.onprogress=b.onwrite=b.onabort=b.onerror=b.onwriteend=null;return function(a,b){return new m(a,b)}}}("undefined"!==typeof self&&
+self||"undefined"!==typeof window&&window||this.content);"undefined"!==typeof module&&null!==module?module.exports=saveAs:"undefined"!==typeof define&&null!==define&&null!=define.amd&&define([],function(){return saveAs});
+
+</script>
+<script>
+function makeXML(){
+var lines = document.getElementById("input_form").value.split(/\n/)
+var rep_level = document.getElementById("rep_level").value
+var import_type = document.getElementById("import_type").value
+var xml_out = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TIEReputations>\n";
+
+if(import_type=="MD5"){
+for (index = 0; index < lines.length; ++index) {
+    xml_out = xml_out + "\t<FileReputation>\n";
+	var entries = lines[index].split(/,/);
+	var z = 0;
+    if (entries.length > 2)
+	break;
+	if (entries.length == 2){
+	xml_out = xml_out + "\t\t<FileName>" + entries[z] +"</FileName>\n";
+	z = ++z;
+	}
+	xml_out = xml_out + "\t\t<MD5Hash>" + entries[z] +"</MD5Hash>\n";
+	z = ++z;
+	xml_out = xml_out + "\t\t<ReputationLevel>" + rep_level + "</ReputationLevel>\n\t</FileReputation>\n";
+}
+xml_out = xml_out + "</TIEReputations>";
+}
+
+if(import_type=="SHA1"){
+for (index = 0; index < lines.length; ++index) {
+    xml_out = xml_out + "\t<FileReputation>\n";
+	var entries = lines[index].split(/,/);
+	var z = 0;
+	if (entries.length > 2)
+	break;
+	if (entries.length == 2){
+	xml_out = xml_out + "\t\t<FileName>" + entries[z] +"</FileName>\n";
+	z = ++z;
+	}
+	xml_out = xml_out + "\t\t<SHA1Hash>" + entries[z] +"</SHA1Hash>\n";
+	z = ++z;
+	xml_out = xml_out + "\t\t<ReputationLevel>" + rep_level + "</ReputationLevel>\n\t</FileReputation>\n";
+}
+xml_out = xml_out + "</TIEReputations>";
+}
+
+if(import_type=="SHA256"){
+for (index = 0; index < lines.length; ++index) {
+    xml_out = xml_out + "\t<FileReputation>\n";
+	var entries = lines[index].split(/,/);
+	var z = 0;
+	if (entries.length > 2)
+	break;
+	if (entries.length == 2){
+	xml_out = xml_out + "\t\t<FileName>" + entries[z] +"</FileName>\n";
+	z = ++z;
+	}
+	xml_out = xml_out + "\t\t<SHA256Hash>" + entries[z] +"</SHA256Hash>\n";
+	z = ++z;
+	xml_out = xml_out + "\t\t<ReputationLevel>" + rep_level + "</ReputationLevel>\n\t</FileReputation>\n";
+}
+xml_out = xml_out + "</TIEReputations>";
+}
+
+if(import_type=="ALL"){
+for (index = 0; index < lines.length; ++index) {
+    xml_out = xml_out + "\t<FileReputation>\n";
+	var entries = lines[index].split(/,/);
+	var z = 0;
+	if (entries.length > 4)
+	break;
+	if (entries.length == 4){
+	xml_out = xml_out + "\t\t<FileName>" + entries[z] +"</FileName>\n";
+	z = ++z;
+	}
+	xml_out = xml_out + "\t\t<MD5Hash>" + entries[z] +"</MD5Hash>\n";
+	z = ++z;
+	xml_out = xml_out + "\t\t<SHA1Hash>" + entries[z] +"</SHA1Hash>\n";
+	z = ++z;
+	xml_out = xml_out + "\t\t<SHA256Hash>" + entries[z] +"</SHA256Hash>\n";
+	xml_out = xml_out + "\t\t<ReputationLevel>" + rep_level + "</ReputationLevel>\n\t</FileReputation>\n";
+}
+xml_out = xml_out + "</TIEReputations>";
+}
+
+document.getElementById("output_form").value = xml_out;
+var blob = new Blob([xml_out], {type: "text/plain;charset=utf-8"});
+saveAs(blob, "import.xml");
+
+}
+
+function getit(filename, text) {
+var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+saveAs(blob, filename);
+}
+
+function clearContents(element) {
+  element.value = '';
+}
+
+</script>
+
+<p>
+<b><u>McAfee TIE HASH IMPORTER</b></u>
+</p>
+
+
+
+<p>
+<br>
+Select Import Type from list below.
+<select id="import_type">
+          <option value="MD5">File Name,MD5</option>
+          <option value="SHA1">File Name,SHA1</option>
+          <option value="SHA256">File Name,SHA256</option>
+          <option value="ALL">File Name,MD5,SHA1,SHA256</option>
+</select>
+</p>
+
+<p>
+<br>
+ Import with the following Reputation:
+ <select id="rep_level">
+  <option selected value="1">Known malicious</option>
+  <option value="15">Most likely malicious</option>
+  <option value="30">Might be malicious</option>
+  <option value="50">Unknown</option>
+  <option value="70">Might be trusted</option>
+  <option value="85">Most likely trusted</option>
+  <option value="99">Known trusted</option>
+  <option value="0">Not Set</option>
+</select> 
+</p>
+
+<textarea cols="100" rows="15" onfocus="clearContents(this);" id="input_form">
+</textarea>
+
+<p>
+
+<br>
+<br>
+ <button onclick="makeXML()">Generate and download XML for import into ePO</button> 
+</p>
+<p>
+<br><br>
+Output
+</p>
+
+  <textarea name="out_data" cols="100" rows="15" onfocus="this.select();" id="output_form">Output text here...</textarea>
+
+
+</body>
+</html>
